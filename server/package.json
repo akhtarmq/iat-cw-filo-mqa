@@ -1,0 +1,22 @@
+{
+  "name": "iat-cw-filo-mqa",
+  "version": "1.0.0",
+  "description": "Aston IAT Coursework File System MQA",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/akhtarmq/iat-cw-filo-mqa.git"
+  },
+  "author": "akhtarmq",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/akhtarmq/iat-cw-filo-mqa/issues"
+  },
+  "homepage": "https://github.com/akhtarmq/iat-cw-filo-mqa#readme",
+  "dependencies": {
+    "mongodb": "^3.5.7"
+  }
+}
