@@ -35,7 +35,7 @@ let upload = multer({
   fileFilter: function (req, file, callback) {
     let ext = path.extname(file.originalname)
     if (ext !== '.png' && ext !== '.jpg' && ext !== '.gif' && ext !== '.jpeg') {
-      return callback(res.end('Only images are allowed'), null)
+      //return callback(res.end('Only images are allowed'), null)
     }
     callback(null, true)
   },
