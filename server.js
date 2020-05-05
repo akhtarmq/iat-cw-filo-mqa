@@ -99,6 +99,7 @@ MongoClient.connect(connectionStringRemote, { useUnifiedTopology: true })
       //   res.end('File is uploaded: ' + req.file.filename)
       if (req.file && req.file.filename) {
         req.body.filename = req.file.filename;
+        console.log('file uploaded. Filename: ' + req.file.filename + ' : filepath: ' + req.file.filepath)
       }
 
       itemCollection.find().sort({ itemid: -1 }).limit(1).toArray()
