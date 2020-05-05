@@ -14,18 +14,18 @@
       <h2>Add Item</h2>
 
       <form action="/item" method="POST" enctype="multipart/form-data">
-        <input type="text" placeholder="name" name="name" />
-        <select name = "category">
+        <input type="text" placeholder="name" name="name" required />
+        <select name = "category" required>
             <option value="" selected>--please choose a category--</option>
             <option value="Jewellery">Jewellery</option>
             <option value="Pet">Pet</option>
             <option value="phone">Phone</option>
         </select>
-        <input type="text" placeholder="color" name="color" />
-        <input type="text" placeholder="location" name="location" />
+        <input type="text" placeholder="color" name="color" required/>
+        <input type="text" placeholder="location" name="location" required/>
         <input type="file" placeholder="picture" name="picture" />
-        <input type="date" placeholder="date" name="date" />
-        <input type="text" placeholder="description" name="description" />
+        <input type="date" placeholder="date" name="date" required/>
+        <input type="text" placeholder="description" name="description" required/>
         <button type="submit">Submit</button>
       </form>
     </section>
