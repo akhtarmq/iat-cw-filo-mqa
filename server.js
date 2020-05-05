@@ -6,7 +6,7 @@ const app = express()
 const path = require('path')
 const multer = require('multer')
 const fs = require('fs');
-
+const port = process.env.PORT || 3000;
 
 const dbName = 'filodb'
 const userCollectionName = 'users'
@@ -174,7 +174,7 @@ MongoClient.connect(connectionStringRemote, { useUnifiedTopology: true })
         .catch(error => console.error(error))
     })
 
-    app.listen(3000, function () {
+    app.listen(port, function () {
       console.log('listening on 3000')
     }
     )
