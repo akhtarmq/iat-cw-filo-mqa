@@ -3,20 +3,24 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Star Wars Quote App</title>
+    <title>Find-The-Lost-Website</title>
     <link rel="stylesheet" href="/styles.css" />
   </head>
-
+  <title>Filo System</title>
   <body>
     <h1 data-position="header">Lost Item form</h1>
 
-    <section data-position="add-request">
+    <section data-position="add-item">
       <h2>Add Item</h2>
 
-      <form action="/picture" method="POST" enctype="multipart/form-data">
-        <input type="text" placeholder="itemid" name="itemid" />
+      <form action="/item" method="POST" enctype="multipart/form-data">
         <input type="text" placeholder="name" name="name" />
-        <input type="text" placeholder="category" name="category" />
+        <select name = "category">
+            <option value="" selected>--please choose a category--</option>
+            <option value="Jewellery">Jewellery</option>
+            <option value="Pet">Pet</option>
+            <option value="phone">Phone</option>
+        </select>
         <input type="text" placeholder="color" name="color" />
         <input type="text" placeholder="location" name="location" />
         <input type="file" placeholder="picture" name="picture" />
@@ -47,36 +51,36 @@
       <div id="message"></div>
     </section>
 -->
-<section data-position="requests">
+<section data-position="items">
     <h2>Items</h2>
   
-    <table class="requests">
+    <table class="items" style="width: 100%">
         <tr>
-            <th> itemid</th>
-            <th> name</th>
-            <th>category</th>
-            <th>color</th>
-            <th>location</th>
-            <th>picture</th>
-            <th>date</th>
-            <th> description</th>
+            <th> ItemId</th>
+            <th> Name</th>
+            <th>Category</th>
+            <th>Color</th>
+            <th>Location</th>
+            <th>Picture</th>
+            <th>Date</th>
+            <th> Description</th>
+            <th> Status</th>
         </tr>
-        <% for(var i = 0; i < requests.length; i++) {%>
+        <% for(var i = 0; i < items.length; i++) {%>
         
-        <tr class="request">
-          <td><%= requests[i].itemid %></td>
-          <td><%= requests[i].name %></td>
-          <td><%= requests[i].category %></td>
-          <td><%= requests[i].color %></td>
-          <td><%= requests[i].location %></td>
-          <td><%= requests[i].picture %></td>
-          <td><%= requests[i].date %></td>
-          <td><%= requests[i].description %></td>
+        <tr class="item">
+          <td><%= items[i].itemid %></td>
+          <td><%= items[i].name %></td>
+          <td><%= items[i].category %></td>
+          <td><%= items[i].color %></td>
+          <td><%= items[i].location %></td>
+          <td><%= items[i].picture %></td>
+          <td><%= items[i].date %></td>
+          <td><%= items[i].description %></td>
+          <td><%= items[i].status %></td>
         <!-- does not do anything-->
         <td>
-          <form action="/requests" method="POST">
-          <button type="submit">request</button>
-          </form>
+          <button data-itemid="<%= items[i].itemid %>" id='request-button'>request</button>
         </td>
         </tr>
        

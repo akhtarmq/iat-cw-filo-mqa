@@ -16,9 +16,9 @@ body {
   grid-template-rows: auto auto 2fr;
   grid-template-areas:
     "header header header"
-    "add-request add-request add-request"
-    "requests requests requests";
-  gap: 1rem;
+    "add-item add-item add-item"
+    "items items items";
+  gap: 2rem;
   margin: 0;
   padding: 1rem;
   background-color: #ffffff;
@@ -31,12 +31,12 @@ body {
   grid-area: header;
 }
 
-[data-position="add-request"] {
-  grid-area: add-request;
+[data-position="add-item"] {
+  grid-area: add-item;
 }
 
-[data-position="requests"] {
-  grid-area: requests;
+[data-position="items"] {
+  grid-area: items;
   overflow: scroll;
 }
 

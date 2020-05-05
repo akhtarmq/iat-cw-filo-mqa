@@ -6,11 +6,11 @@ const app = express()
 const path = require('path')
 const multer = require('multer')
 const fs = require('fs');
- 
+
 
 const dbName = 'filodb'
 const userCollectionName = 'users'
-const requestCollectionName = 'requests'
+const itemCollectionName = 'items'
 const connectionStringLocal = 'mongodb://localhost:27017/' + dbName
 const connectionStringRemote = "mongodb+srv://admin:admin2020@cluster0-bjw97.mongodb.net/test?retryWrites=true&w=majority";
 // const client = new MongoClient(uri, { useNewUrlParser: true });
@@ -21,23 +21,46 @@ const connectionStringRemote = "mongodb+srv://admin:admin2020@cluster0-bjw97.mon
 // });
 
 let storage = multer.diskStorage({
-  destination: function(req, file, callback) {
-      callback(null, __dirname + '/uploads')
+  destination: function (req, file, callback) {
+    callback(null, __dirname + '/uploads')
   },
-  filename: function(req, file, callback) {
-      console.log(file)
-      callback(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname))
+  filename: function (req, file, callback) {
+    console.log(file)
+    callback(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname))
   }
- })
+})
+
+let upload = multer({
+  storage: storage,
+  fileFilter: function (req, file, callback) {
+    let ext = path.extname(file.originalname)
+    if (ext !== '.png' && ext !== '.jpg' && ext !== '.gif' && ext !== '.jpeg') {
+      return callback(res.end('Only images are allowed'), null)
+    }
+    callback(null, true)
+  },
+
+})
+
+function renderIndexScreen(email, itemCollection, res) {
+  itemCollection.find().toArray()
+    .then(results => {
+      console.log("renderIndexScreen: " + results);
+      res.render('index.ejs', { items: results })
+    })
+    .catch(error => console.log(error))
+}
+
+
 
 MongoClient.connect(connectionStringRemote, { useUnifiedTopology: true })
   .then(client => {
     console.log('Connected to Database')
     const db = client.db(dbName)
     const userCollection = db.collection(userCollectionName)
-    const requestCollection = db.collection(requestCollectionName)
+    const itemCollection = db.collection(itemCollectionName)
 
-    
+
     // ========================
     // Middlewares
     // ========================
@@ -48,15 +71,15 @@ MongoClient.connect(connectionStringRemote, { useUnifiedTopology: true })
 
     app.get('/', (req, res) => {
       res.sendFile(__dirname + '/index.html')
-    })  
-    
+    })
+
     app.post('/login', (req, res) => {
-      userCollection.find({ email: req.body.email}).toArray()
+      userCollection.find({ email: req.body.email }).toArray()
         .then(results => {
-          if(results.length < 1) {
+          if (results.length < 1) {
             res.redirect('/')
           } else {
-            res.redirect('/requests')
+            renderIndexScreen(req.body.email, itemCollection, res);
           }
         })
         .catch(error => console.log(error))
@@ -70,65 +93,56 @@ MongoClient.connect(connectionStringRemote, { useUnifiedTopology: true })
         .catch(error => console.error(error))
     })
 
-    app.post('/requests', (req, res) => {
-      requestCollection.insertOne(req.body)
+
+
+    app.post('/item', upload.single('picture'), (req, res) => {
+      //   res.end('File is uploaded: ' + req.file.filename)
+      if (req.file && req.file.filename) {
+        req.body.filename = req.file.filename;
+      }
+
+      itemCollection.find().sort({ itemid: -1 }).limit(1).toArray()
         .then(result => {
-          res.redirect('/requests')
+
+          req.body.itemid = result.length > 0 ? result[0].itemid + 1 : 0;
+
+          itemCollection.insertOne(req.body)
+            .then(result => {
+              renderIndexScreen(req.body.email, itemCollection, res);
+            })
+            .catch(error => console.error(error))
         })
-        .catch(error => console.error(error))
+
+
+      //  console.log(req.file);
+      //req.body.filepath="req.file"
+      // console.log(req)
+
     })
-    var upload = multer({ dest: '/uploads/'});
-    app.post('/picture',  function(req, res){
 
-      // var htm = req.body.htm;
-      // var css = req.body.css;
-  
-      // res.attachment();
-      // res.render('preview',{_layoutFile:'', htm:htm, css:css});
-
-      let upload = multer({
-        storage: storage,
-        fileFilter: function(req, file, callback) {
-            let ext = path.extname(file.originalname)
-            if (ext !== '.png' && ext !== '.jpg' && ext !== '.gif' && ext !== '.jpeg') {
-                return callback(res.end('Only images are allowed'), null)
-            }
-            callback(null, true)
+    app.post('/request', function (req, res) {
+      itemCollection.findOneAndUpdate(
+        { itemid: Number(req.body.itemid) },
+        {
+          $set: {
+            reason: req.body.reason,
+            status: 'requested'
+          }
+        },
+        {
+          upsert: true
         }
-        }).single('picture');
-        upload(req, res, function(err) {
-            res.end('File is uploaded' + err)
-        })
+      )
+        .then(result => res.json('Success'))
+        .catch(error => console.error(error))
+    });
 
-     // console.log(req.file.filename);
- //  console.log(req.files.file.path);
-  //  console.log(req.file);
-
-      
-  //     var file = __dirname + '/' + req.file.filename;
-  // fs.rename(req.file.path, file, function(err) {
-  //   if (err) {
-  //     console.log(err);
-  //     res.send(500);
-  //   } else {
-  //     res.json({
-  //       message: 'File uploaded successfully',
-  //       filename: req.file.filename
-  //     });
-  //   }});
-
-  });
-
-    app.get('/requests', (req, res) => {
-      requestCollection.find({ email: req.body.email}).toArray()
-        .then(results => {
-          res.render('index.ejs', { requests: results })
-        })
-        .catch(error => console.log(error))
+    app.get('/items', (req, res) => {
+      renderIndexScreen(req.body.email, itemCollection, res);
     })
 
     app.post('/cancelrequest', (req, res) => {
-      requestCollection.findOneAndUpdate(
+      itemCollection.findOneAndUpdate(
         { itemId: res.body.itemId },
         {
           $set: {
@@ -144,7 +158,7 @@ MongoClient.connect(connectionStringRemote, { useUnifiedTopology: true })
     })
 
     app.put('/requests', (req, res) => {
-      requestCollection.findOneAndUpdate(
+      itemCollection.findOneAndUpdate(
         { name: 'Yoda' },
         {
           $set: {
@@ -160,7 +174,7 @@ MongoClient.connect(connectionStringRemote, { useUnifiedTopology: true })
         .catch(error => console.error(error))
     })
 
-    app.listen(3000, function() {
+    app.listen(3000, function () {
       console.log('listening on 3000')
     }
     )
