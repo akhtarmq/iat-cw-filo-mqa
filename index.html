@@ -19,44 +19,4 @@
   <input type ="password" placeholder="confirm password" name="confirm_password" required>
   <button type="new user">New User Registeration</button>
 </form>
-
-<section data-position="items">
-  <h2>Items</h2>
-
-  <table class="items" style="width: 100%">
-      <tr>
-          <th> ItemId</th>
-          <th> Name</th>
-          <th>Category</th>
-          <th>Color</th>
-          <th>Location</th>
-          <th>Picture</th>
-          <th>Date</th>
-          <th> Description</th>
-          <th> Status</th>
-      </tr>
-      <% for(var i = 0; i < items.length; i++) {%>
-      
-      <tr class="item">
-        <td><%= items[i].itemid %></td>
-        <td><%= items[i].name %></td>
-        <td><%= items[i].category %></td>
-        <td><%= items[i].color %></td>
-        <td><%= items[i].location %></td>
-        <td><%= items[i].picture %></td>
-        <td><%= items[i].date %></td>
-        <td><%= items[i].description %></td>
-        <td><%= items[i].status %></td>
-      <!-- does not do anything-->
-      <td>
-        <button data-itemid="<%= items[i].itemid %>" id='request-button'>request</button>
-      </td>
-      </tr>
-     
-
-      <% } %>
-    
-  </table>
-</section>
-<script src="/main.js"></script>
 </html>
