@@ -3,6 +3,10 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const MongoClient = require('mongodb').MongoClient
 const app = express()
+const path = require('path')
+const multer = require('multer')
+const fs = require('fs');
+ 
 
 const dbName = 'filodb'
 const userCollectionName = 'users'
@@ -15,6 +19,16 @@ const connectionStringRemote = "mongodb+srv://admin:admin2020@cluster0-bjw97.mon
 //   // perform actions on the collection object
 //   client.close();
 // });
+
+let storage = multer.diskStorage({
+  destination: function(req, file, callback) {
+      callback(null, __dirname + '/uploads')
+  },
+  filename: function(req, file, callback) {
+      console.log(file)
+      callback(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname))
+  }
+ })
 
 MongoClient.connect(connectionStringRemote, { useUnifiedTopology: true })
   .then(client => {
@@ -63,14 +77,46 @@ MongoClient.connect(connectionStringRemote, { useUnifiedTopology: true })
         })
         .catch(error => console.error(error))
     })
+    var upload = multer({ dest: '/uploads/'});
+    app.post('/picture',  function(req, res){
 
-    app.post('/picture', function(req, res){
-
-      var htm = req.body.htm;
-      var css = req.body.css;
+      // var htm = req.body.htm;
+      // var css = req.body.css;
   
-      res.attachment();
-      res.render('preview',{_layoutFile:'', htm:htm, css:css});
+      // res.attachment();
+      // res.render('preview',{_layoutFile:'', htm:htm, css:css});
+
+      let upload = multer({
+        storage: storage,
+        fileFilter: function(req, file, callback) {
+            let ext = path.extname(file.originalname)
+            if (ext !== '.png' && ext !== '.jpg' && ext !== '.gif' && ext !== '.jpeg') {
+                return callback(res.end('Only images are allowed'), null)
+            }
+            callback(null, true)
+        }
+        }).single('picture');
+        upload(req, res, function(err) {
+            res.end('File is uploaded' + err)
+        })
+
+     // console.log(req.file.filename);
+ //  console.log(req.files.file.path);
+  //  console.log(req.file);
+
+      
+  //     var file = __dirname + '/' + req.file.filename;
+  // fs.rename(req.file.path, file, function(err) {
+  //   if (err) {
+  //     console.log(err);
+  //     res.send(500);
+  //   } else {
+  //     res.json({
+  //       message: 'File uploaded successfully',
+  //       filename: req.file.filename
+  //     });
+  //   }});
+
   });
 
     app.get('/requests', (req, res) => {

@@ -13,7 +13,7 @@
     <section data-position="add-request">
       <h2>Add Item</h2>
 
-      <form action="/requests" method="POST">
+      <form action="/picture" method="POST" enctype="multipart/form-data">
         <input type="text" placeholder="itemid" name="itemid" />
         <input type="text" placeholder="name" name="name" />
         <input type="text" placeholder="category" name="category" />
@@ -50,29 +50,40 @@
 <section data-position="requests">
     <h2>Items</h2>
   
-    <ul class="requests">
-    
+    <table class="requests">
+        <tr>
+            <th> itemid</th>
+            <th> name</th>
+            <th>category</th>
+            <th>color</th>
+            <th>location</th>
+            <th>picture</th>
+            <th>date</th>
+            <th> description</th>
+        </tr>
         <% for(var i = 0; i < requests.length; i++) {%>
         
-        <li class="request">
-          <span><%= requests[i].itemid %></span>
-          <span><%= requests[i].name %></span>
-          <span><%= requests[i].category %></span>
-          <span><%= requests[i].color %></span>
-          <span><%= requests[i].location %></span>
-          <span><%= requests[i].picture %></span>
-          <span><%= requests[i].date %></span>
-          <span><%= requests[i].description %></span>
+        <tr class="request">
+          <td><%= requests[i].itemid %></td>
+          <td><%= requests[i].name %></td>
+          <td><%= requests[i].category %></td>
+          <td><%= requests[i].color %></td>
+          <td><%= requests[i].location %></td>
+          <td><%= requests[i].picture %></td>
+          <td><%= requests[i].date %></td>
+          <td><%= requests[i].description %></td>
         <!-- does not do anything-->
-          <form action="/requests">
-          <button type="button">request</button>
+        <td>
+          <form action="/requests" method="POST">
+          <button type="submit">request</button>
           </form>
-        </li>
+        </td>
+        </tr>
        
 
         <% } %>
       
-    </ul>
+    </table>
 </section>
     <script src="/main.js"></script>
   </body>
