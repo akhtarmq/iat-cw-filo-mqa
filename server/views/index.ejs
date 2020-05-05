@@ -8,53 +8,72 @@
   </head>
 
   <body>
-    <h1 data-position="header">May Node and Express be with you.</h1>
+    <h1 data-position="header">Lost Item form</h1>
 
-    <section data-position="add-quote">
-      <h2>Add quote</h2>
+    <section data-position="add-request">
+      <h2>Add Item</h2>
 
-      <form action="/quotes" method="POST">
+      <form action="/requests" method="POST">
+        <input type="text" placeholder="itemid" name="itemid" />
         <input type="text" placeholder="name" name="name" />
-        <input type="text" placeholder="quote" name="quote" />
+        <input type="text" placeholder="category" name="category" />
+        <input type="text" placeholder="color" name="color" />
+        <input type="text" placeholder="location" name="location" />
+        <input type="file" placeholder="picture" name="picture" />
+        <input type="date" placeholder="date" name="date" />
+        <input type="text" placeholder="description" name="description" />
         <button type="submit">Submit</button>
       </form>
     </section>
-
-    <section data-position="update-quote">
+<!--
+    <section data-position="update-request">
       <div>
-        <h2>Darth Vadar invades!</h2>
+        <h2>Edit Request</h2>
         <p>
-          Replace first Yoda's quote with a quote written by Darth Vadar
+          Edit Request
         </p>
-        <button id="update-button">Replace Yoda's quote</button>
+        <button id="update-button">Edit Request</button>
       </div>
     </section>
 
-    <section data-position="delete-quote">
+    <section data-position="cancel-quote">
       <div>
-        <h2>Remove Darth Vadar!</h2>
+        <h2>Cancel Request</h2>
         <p>
-          Delete one Darth Vadar's quote. Does nothing if there are no more
-          Darth Vadar's quote
+          Cancel Request
         </p>
-        <button id="delete-button">Delete Darth Vadar's quote</button>
+        <button id="cancel-button">Cancel Request</button>
       </div>
       <div id="message"></div>
     </section>
-
-    <section data-position="quotes">
-      <h2>Quotes</h2>
-
-      <ul class="quotes">
-        <% for(var i = 0; i < quotes.length; i++) {%>
-        <li class="quote">
-          <span><%= quotes[i].name %></span>:
-          <span><%= quotes[i].quote %></span>
+-->
+<section data-position="requests">
+    <h2>Items</h2>
+  
+    <ul class="requests">
+    
+        <% for(var i = 0; i < requests.length; i++) {%>
+        
+        <li class="request">
+          <span><%= requests[i].itemid %></span>
+          <span><%= requests[i].name %></span>
+          <span><%= requests[i].category %></span>
+          <span><%= requests[i].color %></span>
+          <span><%= requests[i].location %></span>
+          <span><%= requests[i].picture %></span>
+          <span><%= requests[i].date %></span>
+          <span><%= requests[i].description %></span>
+        <!-- does not do anything-->
+          <form action="/requests">
+          <button type="button">request</button>
+          </form>
         </li>
-        <% } %>
-      </ul>
-    </section>
+       
 
+        <% } %>
+      
+    </ul>
+</section>
     <script src="/main.js"></script>
   </body>
 </html>
